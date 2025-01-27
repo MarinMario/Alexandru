@@ -51,7 +51,7 @@ async def ajutor(ctx):
 
 @bot.event
 async def on_member_remove(member: discord.Member):
-    message = f"Sa nu te mai prind pe aici {member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
+    message = f"{member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
 
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
