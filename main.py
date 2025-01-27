@@ -8,6 +8,7 @@ token = env["TOKEN"]
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 bot = commands.Bot(command_prefix="alex ", intents=intents)
 
@@ -28,14 +29,14 @@ async def nume(ctx, member: discord.Member, new_nickname: str):
 @bot.command()
 async def injura(ctx, member: discord.Member):
     await ctx.send(
-        f"{member.name} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
+        f"{member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
     )
 
 
 @bot.command()
 async def complimenteaza(ctx, member: discord.Member):
     await ctx.send(
-        f"{member.name} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
+        f"{member.mention} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
     )
 
 
@@ -46,6 +47,26 @@ async def ajutor(ctx):
         + "\n2. Ca sa injuri pe cineva scrie `alex injura @membru`"
         + "\n3. Ca sa complimentezi pe cineva scrie `alex complimenteaza @membru`"
     )
+
+
+@bot.event
+async def on_member_remove(member: discord.Member):
+    message = f"Sa nu te mai prind pe aici {member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
+
+    channel = discord.utils.get(member.guild.channels, name="📩»welcome")
+    if channel:
+        await channel.send(message)
+
+
+@bot.event
+async def on_member_join(member: discord.Member):
+    culori_channel_id = 1330600421680746688
+    chat_channel_id = 1329881783910793321
+    message = f"Bine ai venit {member.mention}! Iti poti alege o culoare in <#{culori_channel_id}> si trimite un mesaj pe <#{chat_channel_id}> sa vorbim."
+
+    channel = discord.utils.get(member.guild.channels, name="📩»welcome")
+    if channel:
+        await channel.send(message)
 
 
 bot.run(token)
