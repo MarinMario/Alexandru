@@ -1,5 +1,6 @@
 import random
 
+
 def swear_sentence():
     start = ["ba", "sa-mi bag pula in", "futu-te in"]
 
@@ -53,7 +54,7 @@ def swear_sentence():
     end = [
         "fute-m-as pe rasa ma-tii",
         "sa-ti bag toata pula pe gat",
-        "te fut in gura, iti dau muie, si mi-o si sugi",
+        "te fut in gura iti dau muie si mi-o si sugi",
         "baga-ti-as pula pe nas",
         "handicapat infect",
         "sa-mi bag pula in rasa ma-tii",
@@ -70,8 +71,50 @@ def swear_sentence():
     ]
 
     result = random.choice([0, 1, 2])
+    result_start = start[result]
     result_mid = random.choice(mid[result])
     result_end = random.choice(end)
-    x = f"{start[result]} {result_mid} {result_end}"
+    x = f"{result_start} {result_mid} {result_end}"
+
+    return x
+
+
+def compliment_sentence():
+
+    start = ["ba frate", "sa mor io", "te"]
+
+    mid0 = [
+        "esti cel mai smeker om de pe pamantu asta",
+        "esti bazat rau sa moara mama",
+        "sa-mi bag pula coaie te iubesc",
+        "esti atat de smeker",
+        "sunt erect dupa tine",
+        "m-ai facut fleasca",
+    ]
+
+    mid1 = [
+        "de nu esti cel mai smeker om",
+        "coaie esti atat de bazat sa-mi bag pula",
+        "de nu te respect",
+        "esti un om fara egal coaie",
+    ]
+
+    mid2 = [
+        "respect profund coaie",
+        "respect din suflet",
+        "iubesc sa mor io",
+    ]
+
+    mid = [mid0, mid1, mid2]
+
+    # end = [
+    #     "sa"
+    # ]
+
+    result = random.choice([0, 1, 2])
+    result_start = start[result]
+    result_mid = random.choice(mid[result])
+    # result_end = random.choice(end)
+    x = f"{result_start} {result_mid}"
 
     return x

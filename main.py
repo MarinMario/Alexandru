@@ -33,10 +33,18 @@ async def injura(ctx, member: discord.Member):
 
 
 @bot.command()
+async def complimenteaza(ctx, member: discord.Member):
+    await ctx.send(
+        f"{member.name} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
+    )
+
+
+@bot.command()
 async def ajutor(ctx):
     await ctx.send(
-        '1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume-nou-cu-liniute`\n'
-        + '2. Ca sa injuri pe cineva scrie `alex injura @membru`'
+        "1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume-nou-cu-liniute`"
+        + "\n2. Ca sa injuri pe cineva scrie `alex injura @membru`"
+        + "\n3. Ca sa complimentezi pe cineva scrie `alex complimenteaza @membru`"
     )
 
 
