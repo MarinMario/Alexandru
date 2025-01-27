@@ -35,8 +35,8 @@ async def injura(ctx, member: discord.Member):
 @bot.command()
 async def ajutor(ctx):
     await ctx.send(
-        '1. Ca sa setezi nume la alte persoane scrie "alex nume @membru nume-nou-cu-liniute"\n'
-        + '2. Ca sa injuri pe cineva scrie "alex injura @membru"'
+        '1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume-nou-cu-liniute`\n'
+        + '2. Ca sa injuri pe cineva scrie `alex injura @membru`'
     )
 
 
