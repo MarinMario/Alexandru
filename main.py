@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 import json
-import utils
+import utils as utils
+import random
 
 env = json.load(open(".env.json"))
 token = env["TOKEN"]
@@ -39,18 +40,47 @@ async def complimenteaza(ctx, member: discord.Member):
         f"{member.mention} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
     )
 
+
 @bot.command()
-async def spune(ctx, *args): 
+async def spune(ctx, *args):
     message = " ".join(args)
     await ctx.send(message)
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def memoreaza(ctx, *args):
+    quote = " ".join(args)
+    quotes = json.load(open("quotes.json"))
+    quotes.append(quote)
+
+    with open("quotes.json", "w") as file:
+        json.dump(quotes, file, indent=4)
+
+    await ctx.send("gata am memorat")
+
+
+@bot.command()
+async def vorbeste(ctx):
+    quotes = json.load(open("quotes.json"))
+    random_quote = random.choice(quotes)
+
+    await ctx.send(random_quote)
+
+
+@bot.command()
 async def ajutor(ctx):
     await ctx.send(
-        "1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
-        + "\n2. Ca sa injuri pe cineva scrie `alex injura @membru`"
-        + "\n3. Ca sa complimentezi pe cineva scrie `alex complimenteaza @membru`"
+        ""
+        + "\nComenzi pentru Membrii:"
+        + "\n1. Ca sa injuri pe cineva scrie `alex injura @membru`"
+        + "\n2. Ca sa complimentezi pe cineva scrie `alex complimenteaza @membru`"
+        + "\n3. Ca sa spun ceva scrie `alex spune propozitie`"
+        + "\n4. Ca sa spun o propozitie memorata scrie `alex vorbeste`"
+        + "\n"
+        + "\nComenzi pentru Admini:"
+        + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
+        + "\n2. Ca sa memorez ceva scrie `alex memoreaza propozitie`"
     )
 
 
@@ -61,6 +91,7 @@ async def on_member_remove(member: discord.Member):
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
         await channel.send(message)
+
 
 @bot.event
 async def on_member_join(member: discord.Member):
