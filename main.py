@@ -20,8 +20,8 @@ async def salut(ctx):
 
 @bot.command()
 @commands.has_permissions(manage_nicknames=True)
-async def nume(ctx, member: discord.Member, new_nickname: str):
-    formatted_nickname = new_nickname.replace("-", " ")
+async def nume(ctx, member: discord.Member, *args):
+    formatted_nickname = " ".join(args)
     await member.edit(nick=formatted_nickname)
     await ctx.send(f"gata acum {member.name} are numele {formatted_nickname}")
 
@@ -39,11 +39,16 @@ async def complimenteaza(ctx, member: discord.Member):
         f"{member.mention} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
     )
 
+@bot.command()
+async def spune(ctx, *args): 
+    message = " ".join(args)
+    await ctx.send(message)
+
 
 @bot.command()
 async def ajutor(ctx):
     await ctx.send(
-        "1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume-nou-cu-liniute`"
+        "1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
         + "\n2. Ca sa injuri pe cineva scrie `alex injura @membru`"
         + "\n3. Ca sa complimentezi pe cineva scrie `alex complimenteaza @membru`"
     )
@@ -56,7 +61,6 @@ async def on_member_remove(member: discord.Member):
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
         await channel.send(message)
-
 
 @bot.event
 async def on_member_join(member: discord.Member):
