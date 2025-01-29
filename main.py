@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix="alex ", intents=intents)
 
 
 @bot.command()
-async def salut(ctx):
+async def salut(ctx: commands.Context):
     await ctx.send("salut")
 
 
@@ -28,14 +28,14 @@ async def nume(ctx, member: discord.Member, *args):
 
 
 @bot.command()
-async def injura(ctx, member: discord.Member):
+async def injura(ctx: commands.Context, member: discord.Member):
     await ctx.send(
         f"{member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
     )
 
 
 @bot.command()
-async def complimenteaza(ctx, member: discord.Member):
+async def complimenteaza(ctx: commands.Context, member: discord.Member):
     await ctx.send(
         f"{member.mention} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
     )
@@ -61,7 +61,7 @@ async def memoreaza(ctx, *args):
 
 
 @bot.command()
-async def vorbeste(ctx):
+async def vorbeste(ctx: commands.Context):
     quotes = json.load(open("quotes.json"))
     random_quote = random.choice(quotes)
 
@@ -69,7 +69,12 @@ async def vorbeste(ctx):
 
 
 @bot.command()
-async def ajutor(ctx):
+async def test(ctx: commands.Context):
+    pass
+
+
+@bot.command()
+async def ajutor(ctx: commands.Context):
     await ctx.send(
         ""
         + "\nComenzi pentru Membrii:"
@@ -87,10 +92,15 @@ async def ajutor(ctx):
 @bot.event
 async def on_member_remove(member: discord.Member):
     message = f"{member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
+    embed = discord.Embed(
+        title=f"{member.name} a iesit",
+        description=message,
+        color=discord.Color.red(),
+    )
 
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
-        await channel.send(message)
+        await channel.send(embed=embed)
 
 
 @bot.event
@@ -99,9 +109,16 @@ async def on_member_join(member: discord.Member):
     chat_channel_id = 1329881783910793321
     message = f"Bine ai venit {member.mention}! Iti poti alege o culoare in <#{culori_channel_id}> si trimite un mesaj pe <#{chat_channel_id}> sa vorbim."
 
+    embed = discord.Embed(
+        title=f"{member.name} s-a alaturat",
+        description=message,
+        color=discord.Color.green(),
+    )
+
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
-        await channel.send(message)
+        await channel.send(member.mention)
+        await channel.send(embed=embed)
 
 
 bot.run(token)
