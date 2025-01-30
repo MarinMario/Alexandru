@@ -105,10 +105,28 @@ async def memorie(ctx: commands.Context):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def raspunde(ctx: commands.Context, cuvant: str, *args):
+async def raspunde(ctx: commands.Context, *args):
+
+    args_str = " ".join(args)
+    la = ""
+    cu = ""
+    if "#" not in args_str:
+        await ctx.send(
+            "ca sa imi adaugi un raspuns scrie `alex raspunde propozitie#raspuns`"
+        )
+        return
+
+    args_split = args_str.split("#")
+    la = args_split[0]
+    cu = args_split[1]
+    if la == "" or cu == "":
+        await ctx.send(
+            "ca sa imi adaugi un raspuns scrie `alex raspunde propozitie#raspuns`"
+        )
+        return
+
     replies = json.load(open(replies_path))
-    sentence = " ".join(args)
-    replies[cuvant] = sentence
+    replies[la] = cu
 
     with open(replies_path, "w") as file:
         json.dump(replies, file, indent=4)
@@ -118,14 +136,15 @@ async def raspunde(ctx: commands.Context, cuvant: str, *args):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def nu_raspunde(ctx: commands.Context, cuvant: str):
+async def sterge_raspuns(ctx: commands.Context, *args):
+    sentence = " ".join(args)
     replies = json.load(open(replies_path))
-    del replies[cuvant]
+    del replies[sentence]
 
     with open(replies_path, "w") as file:
         json.dump(replies, file, indent=4)
 
-    await ctx.send("gata nu mai raspund")
+    await ctx.send("gata nu mai raspund la " + sentence)
 
 
 @bot.command()
@@ -137,8 +156,6 @@ async def raspunsuri(ctx: commands.Context):
 
     if str_replies == "":
         str_replies = "nu am raspunsuri"
-    else:
-        str_replies = "raspunsurile sunt: \n" + str_replies
 
     await ctx.send(str_replies)
 
@@ -160,8 +177,8 @@ async def ajutor(ctx: commands.Context):
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
         + "\n2. Ca sa memorez ceva scrie `alex memoreaza propozitie`"
         + "\n3. Ca sa uit ceva memorat scrie `alex uita propozitie`"
-        + "\n4. Ca sa ma faci sa spun ceva cand vad un anumit cuvant scrie `alex raspunde cuvant raspuns`"
-        + "\n5. Ca sa nu mai raspund la un anumit cuvant scrie `alex nu_raspunde cuvant`"
+        + "\n4. Ca sa ma faci sa spun ceva cand vad un anumit cuvant scrie `alex raspunde propozitie#raspuns`"
+        + "\n5. Ca sa nu mai raspund la un anumit cuvant scrie `alex sterge_raspuns cuvant`"
     )
 
 
