@@ -1,4 +1,5 @@
 import random
+import os
 
 
 def swear_sentence():
@@ -118,3 +119,12 @@ def compliment_sentence():
     x = f"{result_start} {result_mid}"
 
     return x
+
+
+def init_file(filepath: str, content: str):
+    if not os.path.exists(filepath):
+        with open(filepath, "w") as f:
+            f.write(content)
+            print(f"{filepath} created successfully.")
+    else:
+        print(f"{filepath} already exists.")

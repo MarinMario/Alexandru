@@ -15,6 +15,8 @@ bot = commands.Bot(command_prefix="alex ", intents=intents)
 
 quotes_path = "quotes.json"
 
+utils.init_file(quotes_path, "[]")
+
 
 @bot.command()
 async def salut(ctx: commands.Context):
@@ -79,6 +81,10 @@ async def uita(ctx, *args):
 @bot.command()
 async def vorbeste(ctx: commands.Context):
     quotes = json.load(open(quotes_path))
+    if len(quotes) == 0:
+        await ctx.send("n-am memorat nimic")
+        return
+    
     random_quote = random.choice(quotes)
 
     await ctx.send(random_quote)
