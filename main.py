@@ -89,13 +89,14 @@ async def vorbeste(ctx: commands.Context):
 
     await ctx.send(random_quote)
 
+
 @bot.command()
 async def memorie(ctx: commands.Context):
     quotes = json.load(open(quotes_path))
     if len(quotes) == 0:
         await ctx.send("n-am memorat nimic")
         return
-    
+
     str_quotes = "\n".join(quotes)
     await ctx.send(str_quotes)
 
@@ -110,6 +111,7 @@ async def ajutor(ctx: commands.Context):
         + "\n3. Ca sa spun ceva scrie `alex spune propozitie`"
         + "\n4. Ca sa spun o propozitie memorata scrie `alex vorbeste`"
         + "\n5. Ca sa dai ca zarul scrie `alex barbut`"
+        + "\n6. Ca sa vezi ce am memorat scrie `alex memorie`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
