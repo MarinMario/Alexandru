@@ -14,8 +14,10 @@ intents.members = True
 bot = commands.Bot(command_prefix="alex ", intents=intents)
 
 quotes_path = "quotes.json"
+replies_path = "replies.json"
 
 utils.init_file(quotes_path, "[]")
+utils.init_file(replies_path, "{}")
 
 
 @bot.command()
@@ -102,6 +104,46 @@ async def memorie(ctx: commands.Context):
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def raspunde(ctx: commands.Context, cuvant: str, *args):
+    replies = json.load(open(replies_path))
+    sentence = " ".join(args)
+    replies[cuvant] = sentence
+
+    with open(replies_path, "w") as file:
+        json.dump(replies, file, indent=4)
+
+    await ctx.send("gata asa raspund")
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def nu_raspunde(ctx: commands.Context, cuvant: str):
+    replies = json.load(open(replies_path))
+    del replies[cuvant]
+
+    with open(replies_path, "w") as file:
+        json.dump(replies, file, indent=4)
+
+    await ctx.send("gata nu mai raspund")
+
+
+@bot.command()
+async def raspunsuri(ctx: commands.Context):
+    replies = json.load(open(replies_path))
+    str_replies = ""
+    for key in replies:
+        str_replies += key + ": " + replies[key] + "\n"
+
+    if str_replies == "":
+        str_replies = "nu am raspunsuri"
+    else:
+        str_replies = "raspunsurile sunt: \n" + str_replies
+
+    await ctx.send(str_replies)
+
+
+@bot.command()
 async def ajutor(ctx: commands.Context):
     await ctx.send(
         ""
@@ -112,11 +154,14 @@ async def ajutor(ctx: commands.Context):
         + "\n4. Ca sa spun o propozitie memorata scrie `alex vorbeste`"
         + "\n5. Ca sa dai ca zarul scrie `alex barbut`"
         + "\n6. Ca sa vezi ce am memorat scrie `alex memorie`"
+        + "\n7. Ca sa vezi ce pot raspunde scrie `alex raspunsuri`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
         + "\n2. Ca sa memorez ceva scrie `alex memoreaza propozitie`"
         + "\n3. Ca sa uit ceva memorat scrie `alex uita propozitie`"
+        + "\n4. Ca sa ma faci sa spun ceva cand vad un anumit cuvant scrie `alex raspunde cuvant raspuns`"
+        + "\n5. Ca sa nu mai raspund la un anumit cuvant scrie `alex nu_raspunde cuvant`"
     )
 
 
@@ -170,10 +215,11 @@ async def on_message(message: discord.Message):
     if "alex" not in lower_msg:
         return
 
-    thanks = ["mersi", "multumesc"]
+    replies = json.load(open(replies_path))
 
-    if any(word in lower_msg for word in thanks):
-        await message.channel.send("cu placere")
+    for key in replies:
+        if key.lower() in lower_msg:
+            await message.channel.send(replies[key])
 
     await bot.process_commands(message)
 
