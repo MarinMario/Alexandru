@@ -13,6 +13,8 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="alex ", intents=intents)
 
+quotes_path = "quotes.json"
+
 
 @bot.command()
 async def salut(ctx: commands.Context):
@@ -51,10 +53,10 @@ async def spune(ctx, *args):
 @commands.has_permissions(administrator=True)
 async def memoreaza(ctx, *args):
     quote = " ".join(args)
-    quotes = json.load(open("quotes.json"))
+    quotes = json.load(open(quotes_path))
     quotes.append(quote)
 
-    with open("quotes.json", "w") as file:
+    with open(quotes_path, "w") as file:
         json.dump(quotes, file, indent=4)
 
     await ctx.send("gata am memorat")
@@ -62,15 +64,10 @@ async def memoreaza(ctx, *args):
 
 @bot.command()
 async def vorbeste(ctx: commands.Context):
-    quotes = json.load(open("quotes.json"))
+    quotes = json.load(open(quotes_path))
     random_quote = random.choice(quotes)
 
     await ctx.send(random_quote)
-
-
-@bot.command()
-async def test(ctx: commands.Context):
-    pass
 
 
 @bot.command()
@@ -87,6 +84,14 @@ async def ajutor(ctx: commands.Context):
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
         + "\n2. Ca sa memorez ceva scrie `alex memoreaza propozitie`"
     )
+
+
+@bot.command()
+async def barbut(ctx: commands.Context):
+    dice1 = random.choice([1, 2, 3, 4, 5, 6])
+    dice2 = random.choice([1, 2, 3, 4, 5, 6])
+
+    await ctx.send(f"{ctx.author.mention} ai dat {dice1} {dice2}")
 
 
 @bot.event
