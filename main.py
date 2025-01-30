@@ -172,10 +172,10 @@ async def on_message(message: discord.Message):
 
     thanks = ["mersi", "multumesc"]
 
-    if any(word in lower_msg for word in thanks):  # If someone says "hello", respond
+    if any(word in lower_msg for word in thanks):
         await message.channel.send("cu placere")
 
-    await bot.process_commands(message)  # Ensure commands still work
+    await bot.process_commands(message)
 
 
 bot.run(token)
