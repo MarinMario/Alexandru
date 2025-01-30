@@ -63,6 +63,20 @@ async def memoreaza(ctx, *args):
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def uita(ctx, *args):
+    quote = " ".join(args)
+    quotes = json.load(open(quotes_path))
+    if quote in quotes:
+        quotes.remove(quote)
+        with open(quotes_path, "w") as file:
+            json.dump(quotes, file, indent=4)
+        await ctx.send("gata am uitat")
+    else:
+        await ctx.send("nici macar n-am memorat asta")
+
+
+@bot.command()
 async def vorbeste(ctx: commands.Context):
     quotes = json.load(open(quotes_path))
     random_quote = random.choice(quotes)
@@ -84,6 +98,7 @@ async def ajutor(ctx: commands.Context):
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
         + "\n2. Ca sa memorez ceva scrie `alex memoreaza propozitie`"
+        + "\n3. Ca sa uit ceva memorat scrie `alex uita propozitie`"
     )
 
 
