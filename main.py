@@ -79,6 +79,7 @@ async def ajutor(ctx: commands.Context):
         + "\n2. Ca sa complimentezi pe cineva scrie `alex complimenteaza @membru`"
         + "\n3. Ca sa spun ceva scrie `alex spune propozitie`"
         + "\n4. Ca sa spun o propozitie memorata scrie `alex vorbeste`"
+        + "\n5. Ca sa dai ca zarul scrie `alex barbut`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
@@ -88,8 +89,9 @@ async def ajutor(ctx: commands.Context):
 
 @bot.command()
 async def barbut(ctx: commands.Context):
-    dice1 = random.choice([1, 2, 3, 4, 5, 6])
-    dice2 = random.choice([1, 2, 3, 4, 5, 6])
+    choices = [1, 2, 3, 4, 5, 6]
+    dice1 = random.choice(choices)
+    dice2 = random.choice(choices)
 
     await ctx.send(f"{ctx.author.mention} ai dat {dice1} {dice2}")
 
