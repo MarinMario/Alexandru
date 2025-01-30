@@ -161,4 +161,21 @@ async def on_member_join(member: discord.Member):
         await channel.send(embed=embed)
 
 
+@bot.event
+async def on_message(message: discord.Message):
+    if message.author == bot.user:
+        return
+
+    lower_msg = message.content.lower()
+    if "alex" not in lower_msg:
+        return
+
+    thanks = ["mersi", "multumesc"]
+
+    if any(word in lower_msg for word in thanks):  # If someone says "hello", respond
+        await message.channel.send("cu placere")
+
+    await bot.process_commands(message)  # Ensure commands still work
+
+
 bot.run(token)
