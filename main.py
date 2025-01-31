@@ -24,11 +24,6 @@ utils.init_file(media_path, "{}")
 
 
 @bot.command()
-async def salut(ctx: commands.Context):
-    await ctx.send("salut")
-
-
-@bot.command()
 @commands.has_permissions(manage_nicknames=True)
 async def nume(ctx, member: discord.Member, *args):
     formatted_nickname = " ".join(args)
