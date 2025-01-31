@@ -3,7 +3,6 @@ from discord.ext import commands
 import json
 import utils as utils
 import random
-import os
 
 env = json.load(open(".env.json"))
 token = env["TOKEN"]
@@ -25,6 +24,7 @@ utils.init_file(media_path, "{}")
 
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 @commands.has_permissions(manage_nicknames=True)
 async def nume(ctx, member: discord.Member, *args):
     formatted_nickname = " ".join(args)
@@ -33,6 +33,7 @@ async def nume(ctx, member: discord.Member, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def injura(ctx: commands.Context, member: discord.Member):
     await ctx.send(
         f"{member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
@@ -40,6 +41,7 @@ async def injura(ctx: commands.Context, member: discord.Member):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def complimenteaza(ctx: commands.Context, member: discord.Member):
     await ctx.send(
         f"{member.mention} {utils.compliment_sentence()} {utils.compliment_sentence()} {utils.compliment_sentence()}"
@@ -47,12 +49,14 @@ async def complimenteaza(ctx: commands.Context, member: discord.Member):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def spune(ctx, *args):
     message = " ".join(args)
     await ctx.send(message)
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 @commands.has_permissions(administrator=True)
 async def memoreaza(ctx, *args):
     quote = " ".join(args)
@@ -66,6 +70,7 @@ async def memoreaza(ctx, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 @commands.has_permissions(administrator=True)
 async def uita(ctx, *args):
     quote = " ".join(args)
@@ -80,6 +85,7 @@ async def uita(ctx, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def vorbeste(ctx: commands.Context):
     quotes = json.load(open(quotes_path))
     if len(quotes) == 0:
@@ -92,6 +98,7 @@ async def vorbeste(ctx: commands.Context):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def memorie(ctx: commands.Context):
     quotes = json.load(open(quotes_path))
     if len(quotes) == 0:
@@ -103,6 +110,7 @@ async def memorie(ctx: commands.Context):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 @commands.has_permissions(administrator=True)
 async def raspunde(ctx: commands.Context, *args):
 
@@ -128,6 +136,7 @@ async def raspunde(ctx: commands.Context, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 @commands.has_permissions(administrator=True)
 async def sterge_raspuns(ctx: commands.Context, *args):
     sentence = " ".join(args)
@@ -138,6 +147,7 @@ async def sterge_raspuns(ctx: commands.Context, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def raspunsuri(ctx: commands.Context):
     replies = json.load(open(replies_path))
     str_replies = ""
@@ -151,6 +161,7 @@ async def raspunsuri(ctx: commands.Context):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 @commands.has_permissions(administrator=True)
 async def salveaza_media(ctx: commands.Context, *args):
     name = " ".join(args)
@@ -165,6 +176,7 @@ async def salveaza_media(ctx: commands.Context, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 @commands.has_permissions(administrator=True)
 async def sterge_media(ctx: commands.Context, *args):
     name = " ".join(args)
@@ -175,6 +187,7 @@ async def sterge_media(ctx: commands.Context, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def media(ctx: commands.Context, *args):
     name = " ".join(args)
     content = utils.get_json_file_content(media_path)
@@ -187,6 +200,7 @@ async def media(ctx: commands.Context, *args):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def fisiere_media(ctx: commands.Context):
     content = utils.get_json_file_content(media_path)
     file_names = "\n".join(content.keys())
@@ -199,6 +213,7 @@ async def fisiere_media(ctx: commands.Context):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def barbut(ctx: commands.Context):
     choices = [1, 2, 3, 4, 5, 6]
     dice1 = random.choice(choices)
@@ -208,6 +223,7 @@ async def barbut(ctx: commands.Context):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def a(ctx: commands.context):
     x = random.randint(1, 100)
     message = "a" if x == 1 else x * "A"
@@ -216,6 +232,7 @@ async def a(ctx: commands.context):
 
 
 @bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def ajutor(ctx: commands.Context):
     await ctx.send(
         ""
