@@ -218,6 +218,7 @@ async def ajutor(ctx: commands.Context):
         + "\n7. Ca sa vezi ce pot raspunde scrie `alex raspunsuri`"
         + "\n8. Ca sa postezi fisiere salvate scrie `alex media nume fisier`"
         + "\n9. Ca sa vezi ce fisiere au fost salvate scrie `alex fisiere_media`"
+        + "\n10. Ca sa tip AAAAAAAAAAAA scrie `alex a`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
@@ -237,6 +238,14 @@ async def barbut(ctx: commands.Context):
     dice2 = random.choice(choices)
 
     await ctx.send(f"{ctx.author.mention} ai dat {dice1} {dice2}")
+
+
+@bot.command()
+async def a(ctx: commands.context):
+    x = random.randint(20, 60)
+    message = "a" if x < 25 else x * "A"
+
+    await ctx.send(message)
 
 
 @bot.event
