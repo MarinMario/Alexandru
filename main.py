@@ -241,34 +241,23 @@ async def barbut(ctx: commands.Context):
 
 @bot.event
 async def on_member_remove(member: discord.Member):
-    message = f"{member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
-    embed = discord.Embed(
-        title=f"{member.name} a iesit",
-        description=message,
-        color=discord.Color.red(),
-    )
+    message = f"🔴  {member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
 
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
-        await channel.send(embed=embed)
+        await channel.send(message)
 
 
 @bot.event
 async def on_member_join(member: discord.Member):
     culori_channel_id = 1330600421680746688
     chat_channel_id = 1329881783910793321
-    message = f"Bine ai venit {member.mention}! Iti poti alege o culoare in <#{culori_channel_id}> si trimite un mesaj pe <#{chat_channel_id}> sa vorbim."
-
-    embed = discord.Embed(
-        title=f"{member.name} s-a alaturat",
-        description=message,
-        color=discord.Color.green(),
-    )
+    message = f"🟢  Bine ai venit {member.mention}! Iti poti alege o culoare in <#{culori_channel_id}> si trimite un mesaj pe <#{chat_channel_id}> sa vorbim."
 
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
         await channel.send(member.mention)
-        await channel.send(embed=embed)
+        await channel.send(message)
 
 
 @bot.event
