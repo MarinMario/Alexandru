@@ -1,5 +1,6 @@
 import random
 import os
+import json
 
 
 def swear_sentence():
@@ -121,10 +122,33 @@ def compliment_sentence():
     return x
 
 
-def init_file(filepath: str, content: str):
-    if not os.path.exists(filepath):
-        with open(filepath, "w") as f:
+def init_file(file_path: str, content: str):
+    if not os.path.exists(file_path):
+        with open(file_path, "w") as f:
             f.write(content)
-            print(f"{filepath} created successfully.")
+            print(f"{file_path} created successfully.")
     else:
-        print(f"{filepath} already exists.")
+        print(f"{file_path} already exists.")
+
+
+def init_folder(folder_path: str):
+    current_path = os.getcwd()
+    os.makedirs(current_path + folder_path, exist_ok=True)
+
+
+def save_dict_to_file(_dict: dict, file_path: str):
+    with open(file_path, "w") as file:
+        json.dump(_dict, file, indent=4)
+
+def add_element_to_dict_file(file_path: str, name: str, content: str):
+    file_content = json.load(open(file_path))
+    file_content[name] = content
+    save_dict_to_file(file_content, file_path)
+
+def remove_element_from_dict_file(file_path: str, name: str):
+    file_content = json.load(open(file_path))
+    del file_content[name]
+    save_dict_to_file(file_content, file_path)
+
+def get_json_file_content(file_path: str):
+    return json.load(open(file_path))

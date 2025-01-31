@@ -3,6 +3,7 @@ from discord.ext import commands
 import json
 import utils as utils
 import random
+import os
 
 env = json.load(open(".env.json"))
 token = env["TOKEN"]
@@ -13,11 +14,13 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="alex ", intents=intents)
 
-quotes_path = "quotes.json"
-replies_path = "replies.json"
+quotes_path = "files/quotes.json"
+replies_path = "files/replies.json"
+media_path = "files/media.json"
 
 utils.init_file(quotes_path, "[]")
 utils.init_file(replies_path, "{}")
+utils.init_file(media_path, "{}")
 
 
 @bot.command()
@@ -161,6 +164,48 @@ async def raspunsuri(ctx: commands.Context):
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def salveaza_media(ctx: commands.Context, *args):
+    name = " ".join(args)
+    if not ctx.message.attachments:
+        await ctx.send("n-ai pus fisier in mesaj")
+        return
+
+    attachment = ctx.message.attachments[0]
+    utils.add_element_to_dict_file(media_path, name, attachment.url)
+
+    await ctx.send("gata am salvat fisierul")
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def sterge_media(ctx: commands.Context, *args):
+    name = " ".join(args)
+    utils.remove_element_from_dict_file(media_path, name)
+    await ctx.send(f"gata am sters fisierul {name}")
+
+
+@bot.command()
+async def media(ctx: commands.Context, *args):
+    name = " ".join(args)
+    content = utils.get_json_file_content(media_path)
+
+    if name not in content.keys():
+        await ctx.send(f"nu am fisierul {name}")
+        return
+
+    await ctx.send(content[name])
+
+
+@bot.command()
+async def fisiere(ctx: commands.Context):
+    content = utils.get_json_file_content(media_path)
+    file_names = "\n".join(content.keys())
+
+    await ctx.send(file_names)
+
+
+@bot.command()
 async def ajutor(ctx: commands.Context):
     await ctx.send(
         ""
@@ -172,6 +217,8 @@ async def ajutor(ctx: commands.Context):
         + "\n5. Ca sa dai ca zarul scrie `alex barbut`"
         + "\n6. Ca sa vezi ce am memorat scrie `alex memorie`"
         + "\n7. Ca sa vezi ce pot raspunde scrie `alex raspunsuri`"
+        + "\n8. Ca sa postezi fisiere salvate scrie `alex media nume fisier`"
+        + "\n9. Ca sa vezi ce fisiere au fost salvate scrie `alex fisiere`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
@@ -179,6 +226,8 @@ async def ajutor(ctx: commands.Context):
         + "\n3. Ca sa uit ceva memorat scrie `alex uita propozitie`"
         + "\n4. Ca sa ma faci sa spun ceva cand vad un anumit cuvant scrie `alex raspunde propozitie#raspuns`"
         + "\n5. Ca sa nu mai raspund la un anumit cuvant scrie `alex sterge_raspuns cuvant`"
+        + "\n6. Ca sa salvezi fisiere media scrie `alex salveaza_media nume fisier` si adauga atasamentul"
+        + "\n7. Ca sa stergi fisiere salvate scrie `alex sterge_media nume fisier`"
     )
 
 
