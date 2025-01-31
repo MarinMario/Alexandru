@@ -128,11 +128,7 @@ async def raspunde(ctx: commands.Context, *args):
         )
         return
 
-    replies = json.load(open(replies_path))
-    replies[la] = cu
-
-    with open(replies_path, "w") as file:
-        json.dump(replies, file, indent=4)
+    utils.add_element_to_dict_file(replies_path, la, cu)
 
     await ctx.send("gata asa raspund")
 
@@ -141,13 +137,10 @@ async def raspunde(ctx: commands.Context, *args):
 @commands.has_permissions(administrator=True)
 async def sterge_raspuns(ctx: commands.Context, *args):
     sentence = " ".join(args)
-    replies = json.load(open(replies_path))
-    del replies[sentence]
+    worked = utils.remove_element_from_dict_file(replies_path, sentence)
 
-    with open(replies_path, "w") as file:
-        json.dump(replies, file, indent=4)
-
-    await ctx.send("gata nu mai raspund la " + sentence)
+    message = f"gata nu mai raspund la {sentence}" if worked else "nu merge"
+    await ctx.send(message)
 
 
 @bot.command()
