@@ -170,5 +170,6 @@ async def safe_send(ctx, content: str):
     except discord.HTTPException as e:
         if e.status == 429:
             retry_after = int(e.response.headers.get("Retry-After", 5))
+            print("Cooldown: ", retry_after)
             await asyncio.sleep(retry_after)
             await ctx.send(content)

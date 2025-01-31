@@ -302,8 +302,9 @@ async def on_message(message: discord.Message):
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error):
-    # if isinstance(error, commands.CommandNotFound):
-    #     await utils.safe_send(ctx, "n-am comanda aia, scrie `alex ajutor`")
+    if isinstance(error, commands.CommandNotFound):
+        print("Command doesn't exist")
+        # await utils.safe_send(ctx, "n-am comanda aia, scrie `alex ajutor`")
     if isinstance(error, commands.MissingRequiredArgument):
         await utils.safe_send(ctx, "nu asa se foloseste comanda")
     elif isinstance(error, commands.CommandOnCooldown):
@@ -314,8 +315,9 @@ async def on_command_error(ctx: commands.Context, error):
         await utils.safe_send(ctx, "n-ai permisiuni sa folosesti comanda asta")
     elif isinstance(error, commands.BotMissingPermissions):
         await utils.safe_send(ctx, "n-am permisiuni sa rulez asta")
-    # else:
-    #     await utils.safe_send(ctx, "nush dc da nu merge")
+    else:
+        print("some other error")
+        # await utils.safe_send(ctx, "nush dc da nu merge")
 
     print(f"Error: {error}")
 
