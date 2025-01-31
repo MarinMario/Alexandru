@@ -197,6 +197,10 @@ async def fisiere_media(ctx: commands.Context):
     content = utils.get_json_file_content(media_path)
     file_names = "\n".join(content.keys())
 
+    if len(file_names) == 0:
+        await ctx.send("n-am fisiere")
+        return
+
     await ctx.send(file_names)
 
 
