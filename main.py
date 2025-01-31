@@ -265,7 +265,7 @@ async def on_member_remove(member: discord.Member):
 
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
-        await utils.safe_send(message.channel, message)
+        await utils.safe_send(channel, message)
         # await channel.send(message)
 
 
@@ -277,7 +277,7 @@ async def on_member_join(member: discord.Member):
 
     channel = discord.utils.get(member.guild.channels, name="📩»welcome")
     if channel:
-        await utils.safe_send(message.channel, message)
+        await utils.safe_send(channel, message)
         # await channel.send(message)
 
 

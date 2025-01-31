@@ -1,1 +1,2 @@
 discord.py==2.4.0
+asyncio==3.4.3
