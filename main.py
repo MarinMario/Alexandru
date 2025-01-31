@@ -200,6 +200,23 @@ async def fisiere_media(ctx: commands.Context):
 
 
 @bot.command()
+async def barbut(ctx: commands.Context):
+    choices = [1, 2, 3, 4, 5, 6]
+    dice1 = random.choice(choices)
+    dice2 = random.choice(choices)
+
+    await ctx.send(f"{ctx.author.mention} ai dat {dice1} {dice2}")
+
+
+@bot.command()
+async def a(ctx: commands.context):
+    x = random.randint(1, 100)
+    message = "a" if x == 1 else x * "A"
+
+    await ctx.send(message)
+
+
+@bot.command()
 async def ajutor(ctx: commands.Context):
     await ctx.send(
         ""
@@ -224,23 +241,6 @@ async def ajutor(ctx: commands.Context):
         + "\n6. Ca sa salvezi fisiere media scrie `alex salveaza_media nume fisier` si adauga atasamentul"
         + "\n7. Ca sa stergi fisiere salvate scrie `alex sterge_media nume fisier`"
     )
-
-
-@bot.command()
-async def barbut(ctx: commands.Context):
-    choices = [1, 2, 3, 4, 5, 6]
-    dice1 = random.choice(choices)
-    dice2 = random.choice(choices)
-
-    await ctx.send(f"{ctx.author.mention} ai dat {dice1} {dice2}")
-
-
-@bot.command()
-async def a(ctx: commands.context):
-    x = random.randint(1, 100)
-    message = "a" if x == 1 else x * "A"
-
-    await ctx.send(message)
 
 
 @bot.event
