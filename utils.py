@@ -140,15 +140,22 @@ def save_dict_to_file(_dict: dict, file_path: str):
     with open(file_path, "w") as file:
         json.dump(_dict, file, indent=4)
 
+
 def add_element_to_dict_file(file_path: str, name: str, content: str):
     file_content = json.load(open(file_path))
     file_content[name] = content
     save_dict_to_file(file_content, file_path)
 
+
 def remove_element_from_dict_file(file_path: str, name: str):
     file_content = json.load(open(file_path))
-    del file_content[name]
-    save_dict_to_file(file_content, file_path)
+    if name in file_content.keys():
+        del file_content[name]
+        save_dict_to_file(file_content, file_path)
+        return True
+
+    return False
+
 
 def get_json_file_content(file_path: str):
     return json.load(open(file_path))

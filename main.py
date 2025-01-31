@@ -181,8 +181,10 @@ async def salveaza_media(ctx: commands.Context, *args):
 @commands.has_permissions(administrator=True)
 async def sterge_media(ctx: commands.Context, *args):
     name = " ".join(args)
-    utils.remove_element_from_dict_file(media_path, name)
-    await ctx.send(f"gata am sters fisierul {name}")
+    worked = utils.remove_element_from_dict_file(media_path, name)
+
+    message = f"gata am sters fisierul {name}" if worked else "nu merge"
+    await ctx.send(message)
 
 
 @bot.command()
@@ -198,7 +200,7 @@ async def media(ctx: commands.Context, *args):
 
 
 @bot.command()
-async def fisiere(ctx: commands.Context):
+async def fisiere_media(ctx: commands.Context):
     content = utils.get_json_file_content(media_path)
     file_names = "\n".join(content.keys())
 
@@ -218,7 +220,7 @@ async def ajutor(ctx: commands.Context):
         + "\n6. Ca sa vezi ce am memorat scrie `alex memorie`"
         + "\n7. Ca sa vezi ce pot raspunde scrie `alex raspunsuri`"
         + "\n8. Ca sa postezi fisiere salvate scrie `alex media nume fisier`"
-        + "\n9. Ca sa vezi ce fisiere au fost salvate scrie `alex fisiere`"
+        + "\n9. Ca sa vezi ce fisiere au fost salvate scrie `alex fisiere_media`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
