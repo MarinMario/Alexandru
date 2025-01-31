@@ -107,8 +107,6 @@ async def memorie(ctx: commands.Context):
 async def raspunde(ctx: commands.Context, *args):
 
     args_str = " ".join(args)
-    la = ""
-    cu = ""
     if "#" not in args_str:
         await ctx.send(
             "ca sa imi adaugi un raspuns scrie `alex raspunde propozitie#raspuns`"
@@ -116,15 +114,15 @@ async def raspunde(ctx: commands.Context, *args):
         return
 
     args_split = args_str.split("#")
-    la = args_split[0]
-    cu = args_split[1]
-    if la == "" or cu == "":
+    reply_to = args_split[0]
+    reply_with = args_split[1]
+    if reply_to == "" or reply_with == "":
         await ctx.send(
             "ca sa imi adaugi un raspuns scrie `alex raspunde propozitie#raspuns`"
         )
         return
 
-    utils.add_element_to_dict_file(replies_path, la, cu)
+    utils.add_element_to_dict_file(replies_path, reply_to, reply_with)
 
     await ctx.send("gata asa raspund")
 
