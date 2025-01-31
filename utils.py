@@ -133,7 +133,7 @@ def init_file(file_path: str, content: str):
 
 def init_folder(folder_path: str):
     current_path = os.getcwd()
-    os.makedirs(current_path + folder_path, exist_ok=True)
+    os.makedirs(current_path + "/" + folder_path, exist_ok=True)
 
 
 def save_dict_to_file(_dict: dict, file_path: str):

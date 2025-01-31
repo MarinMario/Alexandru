@@ -18,6 +18,7 @@ quotes_path = "files/quotes.json"
 replies_path = "files/replies.json"
 media_path = "files/media.json"
 
+utils.init_folder("files")
 utils.init_file(quotes_path, "[]")
 utils.init_file(replies_path, "{}")
 utils.init_file(media_path, "{}")
