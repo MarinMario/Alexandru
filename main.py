@@ -292,9 +292,30 @@ async def on_message(message: discord.Message):
 
     for key in replies:
         if key.lower() in lower_msg:
-            await message.channel.send(replies[key])
+            await utils.safe_send(message.channel, replies[key])
+            # await message.channel.send(replies[key])
 
     await bot.process_commands(message)
+
+
+@bot.event
+async def on_command_error(ctx: commands.Context, error):
+    # if isinstance(error, commands.CommandNotFound):
+    #     await utils.safe_send(ctx, "n-am comanda aia, scrie `alex ajutor`")
+    if isinstance(error, commands.MissingRequiredArgument):
+        await utils.safe_send(ctx, "nu asa se foloseste comanda")
+    elif isinstance(error, commands.CommandOnCooldown):
+        await utils.safe_send(
+            ctx, f"nu spama frate. incearca iar in {error.retry_after:.2f} secunde"
+        )
+    elif isinstance(error, commands.MissingPermissions):
+        await utils.safe_send(ctx, "n-ai permisiuni sa folosesti comanda asta")
+    elif isinstance(error, commands.BotMissingPermissions):
+        await utils.safe_send(ctx, "n-am permisiuni sa rulez asta")
+    # else:
+    #     await utils.safe_send(ctx, "nush dc da nu merge")
+
+    print(f"Error: {error}")
 
 
 bot.run(token)

@@ -1,6 +1,9 @@
 import random
 import os
 import json
+import discord
+from discord.ext import commands
+import asyncio
 
 
 def swear_sentence():
@@ -159,3 +162,13 @@ def remove_element_from_dict_file(file_path: str, name: str):
 
 def get_json_file_content(file_path: str):
     return json.load(open(file_path))
+
+
+async def safe_send(ctx, content: str):
+    try:
+        await ctx.send(content)
+    except discord.HTTPException as e:
+        if e.status == 429:
+            retry_after = int(e.response.headers.get("Retry-After", 5))
+            await asyncio.sleep(retry_after)
+            await ctx.send(content)
