@@ -237,8 +237,8 @@ async def barbut(ctx: commands.Context):
 
 @bot.command()
 async def a(ctx: commands.context):
-    x = random.randint(10, 60)
-    message = "a" if x == 10 else x * "A"
+    x = random.randint(1, 100)
+    message = "a" if x == 1 else x * "A"
 
     await ctx.send(message)
 
