@@ -126,6 +126,8 @@ def compliment_sentence():
 
 
 def init_file(file_path: str, content: str):
+    print(f"initalizing file: ", file_path)
+
     if not os.path.exists(file_path):
         with open(file_path, "w") as f:
             f.write(content)
@@ -135,8 +137,27 @@ def init_file(file_path: str, content: str):
 
 
 def init_folder(folder_path: str):
+    print(f"initalizing folder: ", folder_path)
     current_path = os.getcwd()
     os.makedirs(current_path + "/" + folder_path, exist_ok=True)
+
+
+def add_element_to_array_file(ctx: commands.Context, elem: str, file_path: str):
+    full_path = f"files/{ctx.guild.id}/{file_path}"
+    file_content = json.load(open(full_path))
+    file_content.append(elem)
+
+    with open(full_path, "w") as file:
+        json.dump(file_content, file, indent=4)
+
+
+def remove_element_from_arr_file(ctx: commands.Context, elem: str, file_path: str):
+    full_path = f"files/{ctx.guild.id}/{file_path}"
+    file_content = json.load(open(full_path))
+    file_content.remove(elem)
+
+    with open(full_path, "w") as file:
+        json.dump(file_content, file, indent=4)
 
 
 def save_dict_to_file(_dict: dict, file_path: str):
@@ -144,24 +165,29 @@ def save_dict_to_file(_dict: dict, file_path: str):
         json.dump(_dict, file, indent=4)
 
 
-def add_element_to_dict_file(file_path: str, name: str, content: str):
-    file_content = json.load(open(file_path))
+def add_element_to_dict_file(
+    ctx: commands.Context, file_path: str, name: str, content: str
+):
+    full_path = f"files/{ctx.guild.id}/{file_path}"
+    file_content = json.load(open(full_path))
     file_content[name] = content
-    save_dict_to_file(file_content, file_path)
+    save_dict_to_file(file_content, full_path)
 
 
-def remove_element_from_dict_file(file_path: str, name: str):
-    file_content = json.load(open(file_path))
+def remove_element_from_dict_file(ctx: commands.Context, file_path: str, name: str):
+    full_path = f"files/{ctx.guild.id}/{file_path}"
+    file_content = json.load(open(full_path))
     if name in file_content.keys():
         del file_content[name]
-        save_dict_to_file(file_content, file_path)
+        save_dict_to_file(file_content, full_path)
         return True
 
     return False
 
 
-def get_json_file_content(file_path: str):
-    return json.load(open(file_path))
+def get_json_file_content(ctx: commands.Context, file_path: str):
+    full_path = f"files/{ctx.guild.id}/{file_path}"
+    return json.load(open(full_path))
 
 
 async def safe_send(ctx, content: str):

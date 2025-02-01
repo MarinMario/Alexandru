@@ -13,14 +13,23 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="alex ", intents=intents)
 
-quotes_path = "files/quotes.json"
-replies_path = "files/replies.json"
-media_path = "files/media.json"
+server_vars_path = "server_vars.json"
+quotes_path = "quotes.json"
+replies_path = "replies.json"
+media_path = "media.json"
 
-utils.init_folder("files")
-utils.init_file(quotes_path, "[]")
-utils.init_file(replies_path, "{}")
-utils.init_file(media_path, "{}")
+
+@bot.event
+async def on_ready():
+    utils.init_folder("files")
+    for guild in bot.guilds:
+        server_folder = f"files/{guild.id}"
+        utils.init_folder(server_folder)
+        utils.init_file(f"{server_folder}/{server_vars_path}", "{}")
+        utils.init_file(f"{server_folder}/{quotes_path}", "[]")
+        utils.init_file(f"{server_folder}/{replies_path}", "{}")
+        utils.init_file(f"{server_folder}/{media_path}", "{}")
+        print(f"Server Name: {guild.name} | Server ID: {guild.id}")
 
 
 @bot.command()
@@ -60,11 +69,7 @@ async def spune(ctx, *args):
 @commands.has_permissions(administrator=True)
 async def memoreaza(ctx, *args):
     quote = " ".join(args)
-    quotes = json.load(open(quotes_path))
-    quotes.append(quote)
-
-    with open(quotes_path, "w") as file:
-        json.dump(quotes, file, indent=4)
+    utils.add_element_to_array_file(ctx, quote, quotes_path)
 
     await ctx.send("gata am memorat")
 
@@ -74,11 +79,9 @@ async def memoreaza(ctx, *args):
 @commands.has_permissions(administrator=True)
 async def uita(ctx, *args):
     quote = " ".join(args)
-    quotes = json.load(open(quotes_path))
+    quotes = utils.get_json_file_content(ctx, quotes_path)
     if quote in quotes:
-        quotes.remove(quote)
-        with open(quotes_path, "w") as file:
-            json.dump(quotes, file, indent=4)
+        utils.remove_element_from_arr_file(ctx, quote, quotes_path)
         await ctx.send("gata am uitat")
     else:
         await ctx.send("nici macar n-am memorat asta")
@@ -87,7 +90,7 @@ async def uita(ctx, *args):
 @bot.command()
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def vorbeste(ctx: commands.Context):
-    quotes = json.load(open(quotes_path))
+    quotes = utils.get_json_file_content(ctx, quotes_path)
     if len(quotes) == 0:
         await ctx.send("n-am memorat nimic")
         return
@@ -100,7 +103,7 @@ async def vorbeste(ctx: commands.Context):
 @bot.command()
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def memorie(ctx: commands.Context):
-    quotes = json.load(open(quotes_path))
+    quotes = utils.get_json_file_content(ctx, quotes_path)
     if len(quotes) == 0:
         await ctx.send("n-am memorat nimic")
         return
@@ -130,7 +133,7 @@ async def raspunde(ctx: commands.Context, *args):
         )
         return
 
-    utils.add_element_to_dict_file(replies_path, reply_to, reply_with)
+    utils.add_element_to_dict_file(ctx, replies_path, reply_to, reply_with)
 
     await ctx.send("gata asa raspund")
 
@@ -140,7 +143,7 @@ async def raspunde(ctx: commands.Context, *args):
 @commands.has_permissions(administrator=True)
 async def sterge_raspuns(ctx: commands.Context, *args):
     sentence = " ".join(args)
-    worked = utils.remove_element_from_dict_file(replies_path, sentence)
+    worked = utils.remove_element_from_dict_file(ctx, replies_path, sentence)
 
     message = f"gata nu mai raspund la {sentence}" if worked else "nu merge"
     await ctx.send(message)
@@ -149,7 +152,7 @@ async def sterge_raspuns(ctx: commands.Context, *args):
 @bot.command()
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def raspunsuri(ctx: commands.Context):
-    replies = json.load(open(replies_path))
+    replies = utils.get_json_file_content(ctx, replies_path)
     str_replies = ""
     for key in replies:
         str_replies += key + ": " + replies[key] + "\n"
@@ -170,7 +173,7 @@ async def salveaza_media(ctx: commands.Context, *args):
         return
 
     attachment = ctx.message.attachments[0]
-    utils.add_element_to_dict_file(media_path, name, attachment.url)
+    utils.add_element_to_dict_file(ctx, media_path, name, attachment.url)
 
     await ctx.send("gata am salvat fisierul")
 
@@ -180,7 +183,7 @@ async def salveaza_media(ctx: commands.Context, *args):
 @commands.has_permissions(administrator=True)
 async def sterge_media(ctx: commands.Context, *args):
     name = " ".join(args)
-    worked = utils.remove_element_from_dict_file(media_path, name)
+    worked = utils.remove_element_from_dict_file(ctx, media_path, name)
 
     message = f"gata am sters fisierul {name}" if worked else "nu merge"
     await ctx.send(message)
@@ -190,7 +193,7 @@ async def sterge_media(ctx: commands.Context, *args):
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def media(ctx: commands.Context, *args):
     name = " ".join(args)
-    content = utils.get_json_file_content(media_path)
+    content = utils.get_json_file_content(ctx, media_path)
 
     if name not in content.keys():
         await ctx.send(f"nu am fisierul {name}")
@@ -202,7 +205,7 @@ async def media(ctx: commands.Context, *args):
 @bot.command()
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def fisiere_media(ctx: commands.Context):
-    content = utils.get_json_file_content(media_path)
+    content = utils.get_json_file_content(ctx, media_path)
     file_names = "\n".join(content.keys())
 
     if len(file_names) == 0:
@@ -233,6 +236,27 @@ async def a(ctx: commands.context):
 
 @bot.command()
 @commands.cooldown(1, 5, commands.BucketType.user)
+@commands.has_permissions(administrator=True)
+async def seteaza_welcome(ctx: commands.Context, *args):
+    message = " ".join(args)
+    utils.add_element_to_dict_file(
+        ctx, server_vars_path, "welcome_channel", ctx.channel.id
+    )
+    utils.add_element_to_dict_file(ctx, server_vars_path, "welcome_message", message)
+    await ctx.send("gata asta e canalul de welcome")
+
+
+@bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def welcome(ctx: commands.Context):
+    server_vars = utils.get_json_file_content(ctx, server_vars_path)
+    if "welcome_message" not in server_vars:
+        await ctx.send("n-am mesaj de welcome")
+    await ctx.send(server_vars["welcome_message"])
+
+
+@bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def ajutor(ctx: commands.Context):
     await ctx.send(
         ""
@@ -247,6 +271,7 @@ async def ajutor(ctx: commands.Context):
         + "\n8. Ca sa postezi fisiere salvate scrie `alex media nume fisier`"
         + "\n9. Ca sa vezi ce fisiere au fost salvate scrie `alex fisiere_media`"
         + "\n10. Ca sa tip AAAAAAAAAAAA scrie `alex a`"
+        + "\n11. Ca sa vezi mesajul de welcome scrie `alex welcome`"
         + "\n"
         + "\nComenzi pentru Admini:"
         + "\n1. Ca sa setezi nume la alte persoane scrie `alex nume @membru nume nou`"
@@ -256,29 +281,53 @@ async def ajutor(ctx: commands.Context):
         + "\n5. Ca sa nu mai raspund la un anumit cuvant scrie `alex sterge_raspuns cuvant`"
         + "\n6. Ca sa salvezi fisiere media scrie `alex salveaza_media nume fisier` si adauga atasamentul"
         + "\n7. Ca sa stergi fisiere salvate scrie `alex sterge_media nume fisier`"
+        + "\n8. Ca sa setezi canalul de welcome scrie `alex seteaza_welcome mesaj de welcome` in ce canal vrei"
     )
 
 
 @bot.event
 async def on_member_remove(member: discord.Member):
+
+    server_vars = utils.get_json_file_content(member, server_vars_path)
+
+    if "welcome_channel" not in server_vars:
+        print("welcome channel is not configured")
+        return
+
+    welcome_channel_id = server_vars["welcome_channel"]
+    channel = discord.utils.get(member.guild.channels, id=welcome_channel_id)
+
+    if not channel:
+        print("configured welcome channel doesn't exist")
+        return
+
     message = f"🔴 {member.mention} {utils.swear_sentence()} {utils.swear_sentence()} {utils.swear_sentence()}"
 
-    channel = discord.utils.get(member.guild.channels, name="📩»welcome")
-    if channel:
-        await utils.safe_send(channel, message)
-        # await channel.send(message)
+    await utils.safe_send(channel, message)
+    # await channel.send(message)
 
 
 @bot.event
 async def on_member_join(member: discord.Member):
-    culori_channel_id = 1330600421680746688
-    chat_channel_id = 1329881783910793321
-    message = f"🟢 Bine ai venit {member.mention}! Iti poti alege o culoare in <#{culori_channel_id}> si trimite un mesaj pe <#{chat_channel_id}> sa vorbim."
 
-    channel = discord.utils.get(member.guild.channels, name="📩»welcome")
-    if channel:
-        await utils.safe_send(channel, message)
-        # await channel.send(message)
+    server_vars = utils.get_json_file_content(member, server_vars_path)
+
+    if "welcome_message" not in server_vars or "welcome_channel" not in server_vars:
+        print("welcome channel is not configured")
+        return
+
+    welcome_channel_id = server_vars["welcome_channel"]
+    channel = discord.utils.get(member.guild.channels, id=welcome_channel_id)
+
+    if not channel:
+        print("configured welcome channel doesn't exist")
+        return
+
+    welcome_message = server_vars["welcome_message"]
+    message = f"🟢 {member.mention} " + welcome_message
+
+    await utils.safe_send(channel, message)
+    # await channel.send(message)
 
 
 @bot.event
@@ -290,7 +339,7 @@ async def on_message(message: discord.Message):
     if "alex" not in lower_msg:
         return
 
-    replies = json.load(open(replies_path))
+    replies = utils.get_json_file_content(message, replies_path)
 
     for key in replies:
         if key.lower() in lower_msg:
@@ -312,7 +361,7 @@ async def on_command_error(ctx: commands.Context, error):
             ctx, f"nu spama frate. incearca iar in {error.retry_after:.2f} secunde"
         )
     elif isinstance(error, commands.MissingPermissions):
-        await utils.safe_send(ctx, "n-ai permisiuni sa folosesti comanda asta")
+        await utils.safe_send(ctx, "tu n-ai voie")
     elif isinstance(error, commands.BotMissingPermissions):
         await utils.safe_send(ctx, "n-am permisiuni sa rulez asta")
     else:
