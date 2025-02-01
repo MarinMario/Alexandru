@@ -24,12 +24,12 @@ async def on_ready():
     utils.init_folder("files")
     for guild in bot.guilds:
         server_folder = f"files/{guild.id}"
+        print(f"\nServer Name: {guild.name} | Server ID: {guild.id}")
         utils.init_folder(server_folder)
         utils.init_file(f"{server_folder}/{server_vars_path}", "{}")
         utils.init_file(f"{server_folder}/{quotes_path}", "[]")
         utils.init_file(f"{server_folder}/{replies_path}", "{}")
         utils.init_file(f"{server_folder}/{media_path}", "{}")
-        print(f"Server Name: {guild.name} | Server ID: {guild.id}")
 
 
 @bot.command()
