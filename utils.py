@@ -141,6 +141,9 @@ def init_folder(folder_path: str):
     current_path = os.getcwd()
     os.makedirs(current_path + "/" + folder_path, exist_ok=True)
 
+def file_exists(file_path: str):
+    current_path = os.getcwd()
+    return os.path.exists(current_path + "/" + file_path)
 
 def add_element_to_array_file(ctx: commands.Context, elem: str, file_path: str):
     full_path = f"files/{ctx.guild.id}/{file_path}"

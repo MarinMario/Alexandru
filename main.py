@@ -3,6 +3,7 @@ from discord.ext import commands
 import json
 import utils as utils
 import random
+import db
 
 env = json.load(open(".env.json"))
 token = env["TOKEN"]
@@ -21,6 +22,7 @@ media_path = "media.json"
 
 @bot.event
 async def on_ready():
+    db.init()
     utils.init_folder("files")
     for guild in bot.guilds:
         server_folder = f"files/{guild.id}"
@@ -173,7 +175,8 @@ async def salveaza_media(ctx: commands.Context, *args):
         return
 
     attachment = ctx.message.attachments[0]
-    utils.add_element_to_dict_file(ctx, media_path, name, attachment.url)
+    db.insert_dict("Media", name, attachment.url, ctx.guild.id)
+    # utils.add_element_to_dict_file(ctx, media_path, name, attachment.url)
 
     await ctx.send("gata am salvat fisierul")
 
@@ -206,6 +209,7 @@ async def media(ctx: commands.Context, *args):
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def fisiere_media(ctx: commands.Context):
     content = utils.get_json_file_content(ctx, media_path)
+    print(db.select("Media"))
     file_names = "\n".join(content.keys())
 
     if len(file_names) == 0:
